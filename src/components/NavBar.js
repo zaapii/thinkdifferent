@@ -11,6 +11,7 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
+import CartWidget from "./CartWidget"
 
 const pages = ['Productos', 'Categorías', 'Sobre Nosotros']
 const settings = ['Perfil', 'Pedidos', 'Logout']
@@ -104,6 +105,7 @@ const ResponsiveAppBar = () => {
                             </Button>
                         ))}
                     </Box>
+                    <CartWidget />
                     <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
