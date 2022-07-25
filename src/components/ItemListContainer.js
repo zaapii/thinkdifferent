@@ -4,14 +4,16 @@ import axios from 'axios'
 import {makeStyles} from "@mui/styles"
 import {useEffect, useState} from "react"
 
+
 const useStyles = makeStyles({
     gridContainer: {
-        marginLeft: "70px",
-        marginRight: "60px",
-        marginTop: "60px"
+        padding: 80
     }
 })
-const ItemListContainer = () => {
+const ItemListContainer = ({displayBadge}) => {
+    function addItemToCart(value) {
+        displayBadge(value)
+    }
     const [data, setData] = useState({products: []})
     const classes = useStyles();
     useEffect(() => {
@@ -28,12 +30,15 @@ const ItemListContainer = () => {
     return (
         <Grid
             container
-            spacing={8}
+            spacing={4}
+            rowSpacing={4}
             className={classes.gridContainer}
             justify="center"
         >
             {data.products.map(product => (
-                <Producto key={product.id} producto={product} />
+                <Grid item md={3}>
+                    <Producto addItemToCart={addItemToCart} key={product.id} producto={product} />
+                </Grid>
             ))}
         </Grid>
     )

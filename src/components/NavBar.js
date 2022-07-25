@@ -16,7 +16,7 @@ import CartWidget from "./CartWidget"
 const pages = ['Productos', 'Categorías', 'Sobre Nosotros']
 const settings = ['Perfil', 'Pedidos', 'Logout']
 
-const ResponsiveAppBar = () => {
+const ResponsiveAppBar = ({itemQuantity, clearCart}) => {
     const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
 
@@ -105,7 +105,8 @@ const ResponsiveAppBar = () => {
                             </Button>
                         ))}
                     </Box>
-                    <CartWidget />
+                    <CartWidget itemQuantity={itemQuantity}/>
+                    <Button size="small" onClick={clearCart}>Clear cart</Button>
                     <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
