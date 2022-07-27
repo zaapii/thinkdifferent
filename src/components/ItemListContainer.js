@@ -1,8 +1,8 @@
-import Grid from '@mui/material/Grid'
-import Producto from "./Producto"
 import axios from 'axios'
 import {makeStyles} from "@mui/styles"
 import {useEffect, useState} from "react"
+import ItemList from './ItemList'
+import Grid from '@mui/material/Grid'
 
 
 const useStyles = makeStyles({
@@ -35,11 +35,7 @@ const ItemListContainer = ({displayBadge}) => {
             className={classes.gridContainer}
             justify="center"
         >
-            {data.products.map(product => (
-                <Grid item md={3}>
-                    <Producto addItemToCart={addItemToCart} key={product.id} producto={product} />
-                </Grid>
-            ))}
+            <ItemList productos={data.products} displayBadge={addItemToCart} />
         </Grid>
     )
 }
