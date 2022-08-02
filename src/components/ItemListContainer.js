@@ -3,6 +3,7 @@ import {makeStyles} from "@mui/styles"
 import {useEffect, useState} from "react"
 import ItemList from './ItemList'
 import Grid from '@mui/material/Grid'
+import ItemDetailContainer from './ItemDetailContainer'
 
 
 const useStyles = makeStyles({
@@ -14,19 +15,27 @@ const ItemListContainer = ({displayBadge}) => {
     function addItemToCart(value) {
         displayBadge(value)
     }
-    const [data, setData] = useState({products: []})
+    const itemDetail = (producto) => {
+        setOpen(true)
+        setProducto(producto)
+    }
+    
+    const [productos, setProductos] = useState([])
+    const [producto, setProducto] = useState({})
+    const [open, setOpen] = useState(false)
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
     const classes = useStyles();
     useEffect(() => {
-        const fetchData = async () => {
-            const result = await axios(
-                'https://dummyjson.com/products',
-            )
-            setData(result.data)
-        }
-
-        fetchData()
+        axios('https://dummyjson.com/products')
+        .then((response) => {
+            setProductos(response.data.products)
+        })
     }, [])
-
+    
     return (
         <Grid
             container
@@ -35,7 +44,8 @@ const ItemListContainer = ({displayBadge}) => {
             className={classes.gridContainer}
             justify="center"
         >
-            <ItemList productos={data.products} displayBadge={addItemToCart} />
+            <ItemDetailContainer producto={producto} open={open} handleClose={handleClose} />
+            <ItemList itemDetail={itemDetail} productos={productos} displayBadge={addItemToCart} />
         </Grid>
     )
 }

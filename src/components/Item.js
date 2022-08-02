@@ -4,12 +4,12 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import ItemCount from './ItemCount'
-const Producto = ({producto, addItemToCart}) => {
+const Item = ({producto, addItemToCart, itemDetail}) => {
     function onAdd(value) {
         addItemToCart(value)
     }
     return (
-        <Card sx={{maxWidth: 345}}>
+        <Card sx={{maxWidth: 345}} onClick={() => itemDetail(producto)}>
             <CardMedia
                 component="img"
                 height="140"
@@ -31,4 +31,4 @@ const Producto = ({producto, addItemToCart}) => {
     )
 }
 
-export default Producto
+export default Item
