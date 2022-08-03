@@ -9,9 +9,11 @@ import { useState } from "react"
 import Button from '@mui/material/Button';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Undo from '@mui/icons-material/Undo';
+import PreviewIcon from '@mui/icons-material/Preview';
 import { withSnackbar, useSnackbar } from 'notistack';
+import { Link } from 'react-router-dom';
 
-function ItemCount({ nombre, stock, initial, onAdd }) {
+function ItemCount({ nombre, stock, initial, onAdd, id }) {
 
     const [value, setValue] = useState(initial)
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -75,6 +77,11 @@ function ItemCount({ nombre, stock, initial, onAdd }) {
                     <Button sx={{width: '100%', color:"black"}} variant="outlined" onClick={addItems} startIcon={<AddShoppingCartIcon />}>
                         Añadir al carrito
                     </Button>
+                </Grid>
+                <Grid item md={12}>
+                    <Link style={{textDecoration: 'none'}} to={`/item/${id}`}>
+                        <Button sx={{width: '100%', color:"black"}} variant="outlined" color="error" startIcon={<PreviewIcon />}>Ver Detalle</Button>
+                    </Link>
                 </Grid>
             </Grid>
         </div>

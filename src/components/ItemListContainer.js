@@ -3,8 +3,8 @@ import {makeStyles} from "@mui/styles"
 import {useEffect, useState} from "react"
 import ItemList from './ItemList'
 import Grid from '@mui/material/Grid'
-import ItemDetailContainer from './ItemDetailContainer'
-
+import {useParams} from 'react-router-dom'
+import Skeleton from '@mui/material/Skeleton'
 
 const useStyles = makeStyles({
     gridContainer: {
@@ -12,30 +12,30 @@ const useStyles = makeStyles({
     }
 })
 const ItemListContainer = ({displayBadge}) => {
-    function addItemToCart(value) {
+
+    const {category} = useParams()
+    const [productos, setProductos] = useState([])
+
+    function addItemToCart (value) {
         displayBadge(value)
     }
-    const itemDetail = (producto) => {
-        setOpen(true)
-        setProducto(producto)
-    }
-    
-    const [productos, setProductos] = useState([])
-    const [producto, setProducto] = useState({})
-    const [open, setOpen] = useState(false)
 
-    const handleClose = () => {
-        setOpen(false)
+    const filterByCategory = (productos) => {
+        if (!category) {
+            return productos
+        }
+        return productos.filter(producto => producto.category === category)
     }
 
-    const classes = useStyles();
+
+    const classes = useStyles()
     useEffect(() => {
         axios('https://dummyjson.com/products')
-        .then((response) => {
-            setProductos(response.data.products)
-        })
-    }, [])
-    
+            .then((response) => {
+                setProductos(filterByCategory(response.data.products))
+            })
+    }, [category])
+
     return (
         <Grid
             container
@@ -44,8 +44,7 @@ const ItemListContainer = ({displayBadge}) => {
             className={classes.gridContainer}
             justify="center"
         >
-            <ItemDetailContainer producto={producto} open={open} handleClose={handleClose} />
-            <ItemList itemDetail={itemDetail} productos={productos} displayBadge={addItemToCart} />
+            <ItemList productos={productos} displayBadge={addItemToCart} />
         </Grid>
     )
 }

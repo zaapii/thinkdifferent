@@ -12,13 +12,29 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import CartWidget from "./CartWidget"
+import {Link, NavLink} from 'react-router-dom'
+import {useEffect, useState} from 'react'
+import axios from 'axios'
 
-const pages = ['Productos', 'Categorías', 'Sobre Nosotros']
+const pages = ['Sobre Nosotros']
 const settings = ['Perfil', 'Pedidos', 'Logout']
 
 const ResponsiveAppBar = ({itemQuantity, clearCart}) => {
+
+    async function getCategorias () {
+        await axios(`https://dummyjson.com/products/categories`)
+            .then((response) => {
+                setCategorias(response.data.splice(0, 3))
+            })
+    }
+
     const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
+    const [categorias, setCategorias] = useState(null)
+
+    useEffect(() => {
+        getCategorias()
+    }, [])
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget)
@@ -39,7 +55,7 @@ const ResponsiveAppBar = ({itemQuantity, clearCart}) => {
         <AppBar position="static" sx={{bgcolor: "black", paddingLeft: 0, paddingRight: 5}}>
             <Container maxWidth="100%">
                 <Toolbar disableGutters>
-                    <img src="/thinkLogo.png" width={100} />
+                    <Link to={`/`}><img src="/thinkLogo.png" width={100}></img></Link>
                     <Typography
                         variant="h6"
                         noWrap
@@ -94,19 +110,32 @@ const ResponsiveAppBar = ({itemQuantity, clearCart}) => {
                             ))}
                         </Menu>
                     </Box>
-                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
+                    <Box sx={{flexGrow: 1, ml: 3, display: {xs: 'none', md: 'flex'}}}>
                         {pages.map((page) => (
                             <Button
                                 key={page}
                                 onClick={handleCloseNavMenu}
-                                sx={{my: 2, color: 'white', display: 'block'}}
+                                sx={{my: 2, mx: 1, color: 'white', display: 'block'}}
                             >
                                 {page}
                             </Button>
                         ))}
                     </Box>
-                    <CartWidget itemQuantity={itemQuantity}/>
-                    <Button size="small" onClick={clearCart}>Clear cart</Button>
+                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
+                        {categorias?.map((categoria) => (
+                            <Link style={{textDecoration: 'none', fontWeight: 'bold'}} key={categoria} to={`/category/${categoria}`}>
+                                <Button
+                                    variant="outlined" color="error"
+                                    onClick={handleCloseNavMenu}
+                                    sx={{my: 2, mx: 3, color: 'white', display: 'block'}}
+                                >
+                                    {categoria}
+                                </Button>
+                            </Link>
+                        ))}
+                    </Box>
+                    <CartWidget itemQuantity={itemQuantity} />
+                    <Button sx={{mx: 1}} variant="outlined" color="error" size="small" onClick={clearCart}>Clear cart</Button>
                     <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>

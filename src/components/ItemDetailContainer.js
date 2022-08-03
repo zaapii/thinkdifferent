@@ -1,43 +1,31 @@
-import * as React from 'react'
-import Dialog from '@mui/material/Dialog'
 import ItemDetail from './ItemDetail'
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
+import {useEffect, useState} from 'react'
+import axios from 'axios'
+import {useParams} from 'react-router-dom'
 
-const Transition = React.forwardRef(function Transition (props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />
-})
+export default function ItemDetailContainer () {
 
-export default function ItemDetailContainer ({open, handleClose, producto}) {
+    const {productId} = useParams()
+
+    const [loading, setLoading] = useState(false)
+    const [producto, setProducto] = useState({})
+
+    async function getItem () {
+        setLoading(true)
+        await axios(`https://dummyjson.com/products/${productId}`)
+            .then((response) => {
+                setProducto(response.data)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
+    useEffect(() => {
+        getItem()
+    }, [])
+
     return (
-        <div>
-            <Dialog
-                fullScreen
-                open={open}
-                onClose={handleClose}
-                TransitionComponent={Transition}
-            >
-                <AppBar sx={{position: 'relative'}}>
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={handleClose}
-                            aria-label="close"
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography sx={{ml: 2, flex: 1}} variant="h6" component="div">
-                            {`Producto N° ${producto.id} - ${producto.title}`}
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
-                <ItemDetail producto={producto} />
-            </Dialog>
-        </div>
+        producto && <ItemDetail producto={producto} />
     )
 }
