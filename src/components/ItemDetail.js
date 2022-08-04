@@ -14,12 +14,8 @@ const ItemDetail = ({producto}) => {
 
     const [imagenPrincipal, setImagenPrincipal] = useState()
 
-    let a = 1
-    
     setTimeout(() => {
-        if(a === 1) {
-            setImagenPrincipal(producto?.images[0])
-        }
+        setImagenPrincipal(producto?.images[0])
     }, 500);
 
     return (
