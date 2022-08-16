@@ -5,6 +5,7 @@ import { SnackbarProvider } from 'notistack';
 import { useState } from "react";
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import ItemDetailContainer from './components/ItemDetailContainer'
+import Cart from './components/Cart'
 
 function App () {
   const [itemQuantity, setitemQuantity] = useState(0)
@@ -22,6 +23,7 @@ function App () {
         <Route exact path="/" element={<ItemListContainer displayBadge={displayBadge}/>}></Route>
         <Route exact path="/category/:category" element={<ItemListContainer displayBadge={displayBadge}/>}></Route>
         <Route exact path="/item/:productId" element={<ItemDetailContainer />}></Route>
+        <Route exact path="/cart" element={<Cart />}></Route>
       </Routes>
     </SnackbarProvider>
   </BrowserRouter>

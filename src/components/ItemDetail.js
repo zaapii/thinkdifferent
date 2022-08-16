@@ -3,6 +3,10 @@ import * as React from 'react'
 import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
 import {useState} from "react"
+import ItemCount from './ItemCount'
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button'
 
 const ItemDetail = ({producto}) => {
 
@@ -12,7 +16,12 @@ const ItemDetail = ({producto}) => {
         }
     })
 
+    function onAdd(value) {
+        setCantidadProductos(parseInt(value))
+    }
+
     const [imagenPrincipal, setImagenPrincipal] = useState()
+    const [cantidadProductos, setCantidadProductos] = useState(null)
 
     setTimeout(() => {
         setImagenPrincipal(producto?.images[0])
@@ -41,6 +50,12 @@ const ItemDetail = ({producto}) => {
             </Grid>
             <Grid item md={2} sx={{marginTop: 30}}>
                 <h1>Precio: $ {producto.price}</h1>
+                { !cantidadProductos ? 
+                    <ItemCount onAdd={onAdd} nombre={producto.title} id={producto.id} stock={producto.stock} initial="1" /> :
+                    <Link style={{ textDecoration: 'none' }} to={`/cart`}>
+                        <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Finalizar Compra</Button>
+                    </Link>
+                }
             </Grid>
         </Grid>
     )
