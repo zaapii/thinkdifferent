@@ -12,14 +12,15 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import CartWidget from "./CartWidget"
-import {Link, NavLink} from 'react-router-dom'
-import {useEffect, useState} from 'react'
+import {Link} from 'react-router-dom'
+import {useEffect, useState, useContext} from 'react'
 import axios from 'axios'
+import { CartContext } from '../CartContext'
 
 const pages = ['Sobre Nosotros']
 const settings = ['Perfil', 'Pedidos', 'Logout']
 
-const ResponsiveAppBar = ({itemQuantity, clearCart}) => {
+const ResponsiveAppBar = ({itemQuantity}) => {
 
     async function getCategorias () {
         await axios(`https://dummyjson.com/products/categories`)
@@ -31,6 +32,8 @@ const ResponsiveAppBar = ({itemQuantity, clearCart}) => {
     const [anchorElNav, setAnchorElNav] = React.useState(null)
     const [anchorElUser, setAnchorElUser] = React.useState(null)
     const [categorias, setCategorias] = useState(null)
+
+    const {clearCart} = useContext(CartContext)
 
     useEffect(() => {
         getCategorias()

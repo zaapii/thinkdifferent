@@ -11,7 +11,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Undo from '@mui/icons-material/Undo';
 import { withSnackbar, useSnackbar } from 'notistack';
 
-function ItemCount({ nombre, stock, initial, onAdd, id }) {
+function ItemCount({ producto, initial, onAdd}) {
 
     const [value, setValue] = useState(initial)
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -28,12 +28,12 @@ function ItemCount({ nombre, stock, initial, onAdd, id }) {
     );
 
     function addItems(){
-        onAdd(value)
-        enqueueSnackbar(`Ha añadido correctamente ${value} ${nombre}`, { action, variant: 'success' })
+        onAdd({producto: producto, quantity: value})
+        enqueueSnackbar(`Ha añadido correctamente ${value} ${producto.title}`, { action, variant: 'success' })
     }
 
     function addItem() {
-        value < stock ? setValue(parseInt(value) + 1) : setValue(stock)
+        value < producto.stock ? setValue(parseInt(value) + 1) : setValue(producto.stock)
     }
 
     function removeItem() {
@@ -41,12 +41,12 @@ function ItemCount({ nombre, stock, initial, onAdd, id }) {
     }
 
     function verifyStock(e) {
-        if (e.target.value <= stock) {
+        if (e.target.value <= producto.stock) {
             setValue(e.target.value)
             return true
         } else {
-            setValue(stock)
-            enqueueSnackbar(`Ha superado el stock, el stock máximo es ${stock}`, { variant: 'error' })
+            setValue(producto.stock)
+            enqueueSnackbar(`Ha superado el stock, el stock máximo es ${producto.stock}`, { variant: 'error' })
             return false
         }
     }

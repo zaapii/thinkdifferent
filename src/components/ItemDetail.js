@@ -2,13 +2,16 @@ import Grid from '@mui/material/Grid'
 import * as React from 'react'
 import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
-import {useState} from "react"
+import {useState, useContext} from "react"
 import ItemCount from './ItemCount'
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button'
+import {CartContext} from '../CartContext'
 
 const ItemDetail = ({producto}) => {
+
+    const { addToCart, isInCart } = useContext(CartContext)
 
     const itemData = producto?.images?.map(image => {
         return {
@@ -16,8 +19,8 @@ const ItemDetail = ({producto}) => {
         }
     })
 
-    function onAdd(value) {
-        setCantidadProductos(parseInt(value))
+    function onAdd(product) {
+        addToCart(product, product.quantity)
     }
 
     const [imagenPrincipal, setImagenPrincipal] = useState()
@@ -51,7 +54,7 @@ const ItemDetail = ({producto}) => {
             <Grid item md={2} sx={{marginTop: 30}}>
                 <h1>Precio: $ {producto.price}</h1>
                 { !cantidadProductos ? 
-                    <ItemCount onAdd={onAdd} nombre={producto.title} id={producto.id} stock={producto.stock} initial="1" /> :
+                    <ItemCount onAdd={onAdd} producto={producto} initial="1" /> :
                     <Link style={{ textDecoration: 'none' }} to={`/cart`}>
                         <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Finalizar Compra</Button>
                     </Link>

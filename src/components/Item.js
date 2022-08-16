@@ -8,14 +8,20 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
+import {CartContext} from '../CartContext'
+import { useContext } from 'react'
 
 
-const Item = ({ producto, addItemToCart, itemDetail }) => {
-    function onAdd(value) {
-        addItemToCart(value)
+
+
+const Item = ({ producto }) => {
+
+    const { addToCart } = useContext(CartContext)
+    function onAdd(product) {
+        addToCart(product, product.quantity)
     }
     return (
-        <Card sx={{ maxWidth: 345 }} onClick={() => itemDetail(producto)}>
+        <Card sx={{ maxWidth: 345 }}>
             <CardMedia
                 component="img"
                 height="200"
@@ -33,7 +39,7 @@ const Item = ({ producto, addItemToCart, itemDetail }) => {
             <CardActions>
                 <Grid container sx={{ alignItems: "center" }}>
                     <Grid item>
-                        <ItemCount onAdd={onAdd} nombre={producto.title} id={producto.id} stock={producto.stock} initial="1" />
+                        <ItemCount onAdd={onAdd} producto={producto} initial="1" />
                     </Grid>
                     <Grid item md={12} sx={{marginTop: 1}}>
                         <Link style={{ textDecoration: 'none' }} to={`/item/${producto.id}`}>

@@ -44,7 +44,7 @@ const ItemListContainer = ({displayBadge}) => {
             className={classes.gridContainer}
             justify="center"
         >
-            <ItemList productos={productos} displayBadge={addItemToCart} />
+            <ItemList productos={productos} />
         </Grid>
     )
 }
