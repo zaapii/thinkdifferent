@@ -12,7 +12,7 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import CartWidget from "./CartWidget"
-import {Link} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 import {useEffect, useState, useContext} from 'react'
 import axios from 'axios'
 import { CartContext } from '../CartContext'
@@ -58,7 +58,7 @@ const ResponsiveAppBar = ({itemQuantity}) => {
         <AppBar position="static" sx={{bgcolor: "black", paddingLeft: 0, paddingRight: 5}}>
             <Container maxWidth="100%">
                 <Toolbar disableGutters>
-                    <Link to={`/`}><img src="/thinkLogo.png" width={100}></img></Link>
+                    <NavLink to={`/`}><img src="/thinkLogo.png" width={100}></img></NavLink>
                     <Typography
                         variant="h6"
                         noWrap
@@ -126,7 +126,7 @@ const ResponsiveAppBar = ({itemQuantity}) => {
                     </Box>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                         {categorias?.map((categoria) => (
-                            <Link style={{textDecoration: 'none', fontWeight: 'bold'}} key={categoria} to={`/category/${categoria}`}>
+                            <NavLink style={{textDecoration: 'none', fontWeight: 'bold'}} key={categoria} to={`/category/${categoria}`}>
                                 <Button
                                     variant="outlined" color="error"
                                     onClick={handleCloseNavMenu}
@@ -134,7 +134,7 @@ const ResponsiveAppBar = ({itemQuantity}) => {
                                 >
                                     {categoria}
                                 </Button>
-                            </Link>
+                            </NavLink>
                         ))}
                     </Box>
                     <CartWidget itemQuantity={itemQuantity} />

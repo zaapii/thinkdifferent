@@ -11,7 +11,7 @@ import {CartContext} from '../CartContext'
 
 const ItemDetail = ({producto}) => {
 
-    const { addToCart, isInCart } = useContext(CartContext)
+    const { addToCart, cart } = useContext(CartContext)
 
     const itemData = producto?.images?.map(image => {
         return {
@@ -53,7 +53,7 @@ const ItemDetail = ({producto}) => {
             </Grid>
             <Grid item md={2} sx={{marginTop: 30}}>
                 <h1>Precio: $ {producto.price}</h1>
-                { !cantidadProductos ? 
+                { !cart.length ? 
                     <ItemCount onAdd={onAdd} producto={producto} initial="1" /> :
                     <Link style={{ textDecoration: 'none' }} to={`/cart`}>
                         <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Finalizar Compra</Button>

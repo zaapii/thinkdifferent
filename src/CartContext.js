@@ -13,6 +13,23 @@ const CartProvider = (children) => {
         setCart([])
     }
 
+    const cartTotalProducts = () => {
+        let sum = 0
+        cart.forEach(product => {
+            sum += parseInt(product.quantity)
+        })
+        console.log(sum)
+        return sum
+    }
+
+    const cartTotal = () => {
+        let sum = 0
+        cart.forEach(product => {
+            sum += (product.price*product.quantity)
+        })
+        return sum
+    }
+
     const addToCart = (item, quantity) => {
         if(cart.length === 0) {
             const itemToAdd = {
@@ -44,10 +61,15 @@ const CartProvider = (children) => {
         }
     }
 
-    const removeFromCart = () => { }
+    const removeFromCart = (productId) => { 
+        const itemIndex = cart.findIndex(itemCart => itemCart.id === productId)
+        const cartDraft = [...cart]
+        cartDraft.splice(itemIndex,1)
+        setCart(cartDraft)
+    }
 
     return (
-        <CartContext.Provider value={{ cart, isInCart, clearCart, addToCart, removeFromCart, cartQty: cart.length }}>
+        <CartContext.Provider value={{ cart, cartTotalProducts, cartTotal, isInCart, clearCart, addToCart, removeFromCart, cartQty: cart.length }}>
             {children.children}
         </CartContext.Provider>
     )
