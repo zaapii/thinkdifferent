@@ -138,7 +138,6 @@ const ResponsiveAppBar = ({itemQuantity}) => {
                         ))}
                     </Box>
                     <CartWidget itemQuantity={itemQuantity} />
-                    <Button sx={{mx: 1}} variant="outlined" color="error" size="small" onClick={clearCart}>Clear cart</Button>
                     <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
