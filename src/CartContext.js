@@ -31,13 +31,14 @@ const CartProvider = (children) => {
     }
 
     const addToCart = (item, quantity) => {
+        console.log(item)
+        console.log(quantity)
         if(cart.length === 0) {
             const itemToAdd = {
                 ...item.producto,
                 quantity: parseInt(quantity)
             }
-            setCart([itemToAdd])
-            cart.push(itemToAdd)
+            setCart([...cart, itemToAdd]);
             return
         }
 
