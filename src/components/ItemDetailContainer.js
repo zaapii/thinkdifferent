@@ -1,8 +1,8 @@
 import ItemDetail from './ItemDetail'
 import {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
-
-import { doc, getFirestore, getDoc } from "firebase/firestore"
+import { doc, getDoc } from "firebase/firestore"
+import { db } from '../firebase'
 
 export default function ItemDetailContainer () {
 
@@ -13,8 +13,6 @@ export default function ItemDetailContainer () {
 
     async function getItem () {
         setLoading(true)
-        const db = getFirestore()
-
         const item = doc(db, "items", productId)
 
         getDoc(item).then((snapshot) => {

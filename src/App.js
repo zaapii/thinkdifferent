@@ -2,7 +2,6 @@ import './App.css'
 import NavBar from './components/NavBar'
 import ItemListContainer from './components/ItemListContainer'
 import { SnackbarProvider } from 'notistack';
-import { useState } from "react";
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import ItemDetailContainer from './components/ItemDetailContainer'
 import Cart from './components/Cart'

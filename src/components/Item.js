@@ -11,9 +11,6 @@ import Grid from '@mui/material/Grid'
 import {CartContext} from '../CartContext'
 import { useContext } from 'react'
 
-
-
-
 const Item = ({ producto }) => {
 
     const { addToCart } = useContext(CartContext)

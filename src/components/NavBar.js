@@ -12,17 +12,26 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import CartWidget from "./CartWidget"
-import {NavLink} from 'react-router-dom'
-import {useEffect, useState, useContext} from 'react'
+import { NavLink } from 'react-router-dom'
+import { useEffect, useState, useContext } from 'react'
 import { CartContext } from '../CartContext'
 import { getDocs, collection, getFirestore } from "firebase/firestore"
+import { auth, signInWithGoogle, logout } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import GoogleIcon from '@mui/icons-material/Google';
+import { Alert } from '@mui/material'
 
 const pages = ['Sobre Nosotros']
-const settings = ['Perfil', 'Pedidos', 'Logout']
+const settings = ['Perfil', 'Pedidos']
 
-const ResponsiveAppBar = ({itemQuantity}) => {
-
-    async function getCategorias () {
+const ResponsiveAppBar = ({ itemQuantity }) => {
+    const [user, loading, error] = useAuthState(auth);
+    useEffect(() => {
+        if (loading) {
+            return;
+        }
+    }, [user, loading]);
+    async function getCategorias() {
         const db = getFirestore()
 
         const itemsCollection = collection(db, "categories")
@@ -36,7 +45,7 @@ const ResponsiveAppBar = ({itemQuantity}) => {
     const [anchorElUser, setAnchorElUser] = React.useState(null)
     const [categorias, setCategorias] = useState(null)
 
-    const {clearCart} = useContext(CartContext)
+    const { clearCart } = useContext(CartContext)
 
     useEffect(() => {
         getCategorias()
@@ -58,7 +67,7 @@ const ResponsiveAppBar = ({itemQuantity}) => {
     }
 
     return (
-        <AppBar position="static" sx={{bgcolor: "black", paddingLeft: 0, paddingRight: 5}}>
+        <AppBar position="static" sx={{ bgcolor: "black", paddingLeft: 0, paddingRight: 5 }}>
             <Container maxWidth="100%">
                 <Toolbar disableGutters>
                     <NavLink to={`/`}><img src="/thinkLogo.png" width={100}></img></NavLink>
@@ -69,7 +78,7 @@ const ResponsiveAppBar = ({itemQuantity}) => {
                         href="/"
                         sx={{
                             mr: 2,
-                            display: {xs: 'none', md: 'flex'},
+                            display: { xs: 'none', md: 'flex' },
                             fontFamily: 'monospace',
                             fontWeight: 700,
                             letterSpacing: '.3rem',
@@ -80,7 +89,7 @@ const ResponsiveAppBar = ({itemQuantity}) => {
                         THINK DIFFERENT
                     </Typography>
 
-                    <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
                             aria-label="account of current user"
@@ -106,7 +115,7 @@ const ResponsiveAppBar = ({itemQuantity}) => {
                             open={Boolean(anchorElNav)}
                             onClose={handleCloseNavMenu}
                             sx={{
-                                display: {xs: 'block', md: 'none'},
+                                display: { xs: 'block', md: 'none' },
                             }}
                         >
                             {pages.map((page) => (
@@ -116,24 +125,24 @@ const ResponsiveAppBar = ({itemQuantity}) => {
                             ))}
                         </Menu>
                     </Box>
-                    <Box sx={{flexGrow: 1, ml: 3, display: {xs: 'none', md: 'flex'}}}>
+                    <Box sx={{ flexGrow: 1, ml: 3, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
                             <Button
                                 key={page}
                                 onClick={handleCloseNavMenu}
-                                sx={{my: 2, mx: 1, color: 'white', display: 'block'}}
+                                sx={{ my: 2, mx: 1, color: 'white', display: 'block' }}
                             >
                                 {page}
                             </Button>
                         ))}
                     </Box>
-                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {categorias && categorias[0].map((categoria) => (
-                            <NavLink style={{textDecoration: 'none', fontWeight: 'bold'}} key={categoria} to={`/category/${categoria}`}>
+                            <NavLink style={{ textDecoration: 'none', fontWeight: 'bold' }} key={categoria} to={`/category/${categoria}`}>
                                 <Button
                                     variant="outlined" color="error"
                                     onClick={handleCloseNavMenu}
-                                    sx={{my: 2, mx: 3, color: 'white', display: 'block'}}
+                                    sx={{ my: 2, mx: 3, color: 'white', display: 'block' }}
                                 >
                                     {categoria}
                                 </Button>
@@ -141,35 +150,48 @@ const ResponsiveAppBar = ({itemQuantity}) => {
                         ))}
                     </Box>
                     <CartWidget itemQuantity={itemQuantity} />
-                    <Box sx={{flexGrow: 0}}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                <Avatar alt="Remy Sharp" src="https://media-exp1.licdn.com/dms/image/C4D03AQE4qtQl1xQMIg/profile-displayphoto-shrink_200_200/0/1646871543176?e=2147483647&v=beta&t=2GrSH4B3cAUiiXgT9xZhfn77kCMgDcAQl0_4nLDuMEU" />
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{mt: '45px'}}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
+                    {user ? <Alert variant="outlined" sx={{color: 'white', marginRight: 2}} color="error" severity="success">
+                        Bienvenido {user.email}
+                    </Alert> : ''}
+                    {user ?
+                        <div>
+                            <Box sx={{ flexGrow: 0 }}>
+                                <Tooltip title="Open settings">
+                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                        <Avatar alt="Remy Sharp" src={user.photoURL} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
+                                    {settings.map((setting) => (
+                                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                            <Typography textAlign="center">{setting}</Typography>
+                                        </MenuItem>
+                                    ))}
+                                    <MenuItem key='logout' onClick={logout}>
+                                        <Typography textAlign="center">Logout</Typography>
+                                    </MenuItem>
+                                </Menu>
+                            </Box>
+                        </div>
+                        : <Button onClick={signInWithGoogle} color="error" variant="contained" endIcon={<GoogleIcon />}>
+                            Login with Google
+                        </Button>
+                    }
                 </Toolbar>
             </Container>
         </AppBar>
