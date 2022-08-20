@@ -14,8 +14,8 @@ import MenuItem from '@mui/material/MenuItem'
 import CartWidget from "./CartWidget"
 import {NavLink} from 'react-router-dom'
 import {useEffect, useState, useContext} from 'react'
-import axios from 'axios'
 import { CartContext } from '../CartContext'
+import { getDocs, collection, getFirestore } from "firebase/firestore"
 
 const pages = ['Sobre Nosotros']
 const settings = ['Perfil', 'Pedidos', 'Logout']
@@ -23,10 +23,13 @@ const settings = ['Perfil', 'Pedidos', 'Logout']
 const ResponsiveAppBar = ({itemQuantity}) => {
 
     async function getCategorias () {
-        await axios(`https://dummyjson.com/products/categories`)
-            .then((response) => {
-                setCategorias(response.data.splice(0, 3))
-            })
+        const db = getFirestore()
+
+        const itemsCollection = collection(db, "categories")
+
+        getDocs(itemsCollection).then((snapshot) => {
+            setCategorias(snapshot.docs.map(doc => doc.data().categories))
+        })
     }
 
     const [anchorElNav, setAnchorElNav] = React.useState(null)
@@ -125,7 +128,7 @@ const ResponsiveAppBar = ({itemQuantity}) => {
                         ))}
                     </Box>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-                        {categorias?.map((categoria) => (
+                        {categorias && categorias[0].map((categoria) => (
                             <NavLink style={{textDecoration: 'none', fontWeight: 'bold'}} key={categoria} to={`/category/${categoria}`}>
                                 <Button
                                     variant="outlined" color="error"
