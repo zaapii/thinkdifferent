@@ -1,8 +1,7 @@
 import Grid from '@mui/material/Grid'
-import * as React from 'react'
 import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import ItemCount from './ItemCount'
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import { Link } from 'react-router-dom';
@@ -22,9 +21,9 @@ const ItemDetail = ({ producto, imagenes }) => {
 
     const [imagenPrincipal, setImagenPrincipal] = useState()
 
-    React.useEffect(() => {
+    useEffect(() => {
         setImagenPrincipal(imagenes[0])
-    }, [])
+    }, [imagenes])
     
 
     return (

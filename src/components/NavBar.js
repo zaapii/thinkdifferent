@@ -1,4 +1,3 @@
-import * as React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -12,9 +11,8 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import CartWidget from "./CartWidget"
-import { NavLink } from 'react-router-dom'
-import { useEffect, useState, useContext } from 'react'
-import { CartContext } from '../CartContext'
+import { useNavigate, NavLink } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { getDocs, collection, getFirestore } from "firebase/firestore"
 import { auth, signInWithGoogle, logout } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -24,7 +22,12 @@ import { Alert } from '@mui/material'
 const pages = ['Sobre Nosotros']
 
 const ResponsiveAppBar = ({ itemQuantity }) => {
-    const [user, loading, error] = useAuthState(auth);
+    const [user, loading] = useAuthState(auth);
+    const [anchorElNav, setAnchorElNav] = useState(null)
+    const [anchorElUser, setAnchorElUser] = useState(null)
+    const [categorias, setCategorias] = useState(null)
+    const navigate = useNavigate()
+
     useEffect(() => {
         if (loading) {
             return;
@@ -40,11 +43,11 @@ const ResponsiveAppBar = ({ itemQuantity }) => {
         })
     }
 
-    const [anchorElNav, setAnchorElNav] = React.useState(null)
-    const [anchorElUser, setAnchorElUser] = React.useState(null)
-    const [categorias, setCategorias] = useState(null)
+    const logoutAndRedirect = () => {
+        logout()
+        navigate(`/`)
+    }
 
-    const { clearCart } = useContext(CartContext)
 
     useEffect(() => {
         getCategorias()
@@ -69,7 +72,7 @@ const ResponsiveAppBar = ({ itemQuantity }) => {
         <AppBar position="static" sx={{ bgcolor: "black", paddingLeft: 0, paddingRight: 5 }}>
             <Container maxWidth="100%">
                 <Toolbar disableGutters>
-                    <NavLink to={`/`}><img src="/thinkLogo.png" width={100}></img></NavLink>
+                    <NavLink to={`/`}><img src="/thinkLogo.png" width={100} alt="logoThink"></img></NavLink>
                     <Typography
                         variant="h6"
                         noWrap
@@ -176,12 +179,12 @@ const ResponsiveAppBar = ({ itemQuantity }) => {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
-                                    <NavLink style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }} to={`/orders/${user.uid}`}>
-                                    <MenuItem key='orders'>
+                                    <NavLink style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }} to={`/orders/${user.uid}`} onClick={handleCloseUserMenu}>
+                                    <MenuItem key='orders' onClick={handleCloseUserMenu}>
                                         <Typography textAlign="center">Orders</Typography>
                                     </MenuItem>
                                     </NavLink>
-                                    <MenuItem key='logout' onClick={logout}>
+                                    <MenuItem key='logout' onClick={logoutAndRedirect}>
                                         <Typography textAlign="center">Logout</Typography>
                                     </MenuItem>
                                 </Menu>

@@ -1,13 +1,11 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { CartContext } from '../CartContext'
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import { styled } from '@mui/material/styles';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
@@ -20,6 +18,7 @@ import { db, auth } from '../firebase'
 import { useSnackbar } from 'notistack';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
+import GenericCard from './GenericCard';
 
 
 const Cart = () => {
@@ -27,9 +26,8 @@ const Cart = () => {
     let navigate = useNavigate();
     let userId = null;
     const { cart, cartTotal, removeFromCart, clearCart } = useContext(CartContext)
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const [user] = useAuthState(auth);
-    const [userOrders, setUserOrders] = useState()
 
     function goToOrder(order) {
         navigate(`/order/${order.id}`)
@@ -83,18 +81,10 @@ const Cart = () => {
             goToOrder({ ...order, id: id })
         })
     }
-
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fafafa',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.primary,
-    }));
     return (
         <Grid2 container sx={{ padding: 5 }}>
             <Grid2 md={12} display="flex" justifyContent="center" alignItems="center">
-                <Item>
+                <GenericCard>
                     {cart.length > 0 ?
                         <List sx={{ width: 1000, maxWidth: 1000, bgcolor: 'background.paper' }}>
                             {cart.map(product => (
@@ -144,7 +134,7 @@ const Cart = () => {
                             </NavLink>
                         </div>
                     }
-                </Item>
+                </GenericCard>
             </Grid2>
         </Grid2>
 

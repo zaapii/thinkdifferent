@@ -4,22 +4,15 @@ import { useParams } from 'react-router-dom'
 import { db, auth } from '../firebase'
 import LinearProgress from '@mui/material/LinearProgress';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import { Alert, AlertTitle, Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Paper } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Alert, Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { useAuthState } from "react-firebase-hooks/auth";
+import GenericCard from './GenericCard'
 
 const Order = () => {
     const { orderId } = useParams()
     const [user] = useAuthState(auth);
     const [order, setOrder] = useState(null)
     const [loading, setLoading] = useState(false)
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fafafa',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.primary,
-    }));
 
     async function getOrder() {
         setLoading(true)
@@ -42,7 +35,7 @@ const Order = () => {
             {order &&
                 <Grid2 container sx={{ padding: 5 }}>
                     <Grid2 md={12} display="flex" justifyContent="center" alignItems="center">
-                        <Item>
+                        <GenericCard>
                         <Alert severity="success" variant="filled">
                             ¡Orden recibida correctamente! — Recibiras las instrucciones para el envio de la compra a tu email: <strong>{user.email}</strong>
                         </Alert>
@@ -96,7 +89,7 @@ const Order = () => {
                                     <h1>{`Total de la compra: $ ${order.total}`}</h1>
                                 </ListItem>
                             </List>
-                        </Item>
+                        </GenericCard>
                     </Grid2>
                 </Grid2>
             }

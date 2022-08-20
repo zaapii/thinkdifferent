@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import ItemList from './ItemList'
 import Grid from '@mui/material/Grid'
 import { useParams } from 'react-router-dom'
-import { getDocs, collection, getFirestore, query, where, limit } from "firebase/firestore"
+import { getDocs, collection, query, where, limit } from "firebase/firestore"
 import Button from '@mui/material/Button'
 import { NavLink } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';

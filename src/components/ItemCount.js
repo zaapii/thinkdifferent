@@ -1,24 +1,27 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import { useState } from "react"
+import { useContext, useState } from "react"
 import Button from '@mui/material/Button';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import Undo from '@mui/icons-material/Undo';
 import { withSnackbar, useSnackbar } from 'notistack';
+import { CartContext } from '../CartContext'
+
 
 function ItemCount({ producto, initial, onAdd}) {
 
     const [value, setValue] = useState(initial)
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
+    const { removeFromCart } = useContext(CartContext)
 
     const action = () => (
         <>
           <Button size="small" sx={{color: 'white'}} startIcon={<Undo />} onClick={() => {
+            removeFromCart(producto.id)
             enqueueSnackbar(`Ha removido ${value} articulos del carrito`, { variant: 'warning' })
             setValue(1) 
             }}>

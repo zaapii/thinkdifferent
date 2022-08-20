@@ -1,14 +1,14 @@
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { styled } from '@mui/material/styles';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import { auth, db } from "../firebase";
-import { Divider, IconButton, List, ListItem, ListItemText, Paper } from "@mui/material";
+import { Divider, IconButton, List, ListItem, ListItemText } from "@mui/material";
 import LinearProgress from '@mui/material/LinearProgress';
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import PreviewIcon from '@mui/icons-material/Preview';
+import GenericCard from './GenericCard'
 
 const Orders = () => {
     const [loading, setLoading] = useState(false)
@@ -36,14 +36,6 @@ const Orders = () => {
         console.log(orderId)
     }
 
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fafafa',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.primary,
-    }));
-
     return (
         <div>
             {loading && <LinearProgress color="error" />}
@@ -51,7 +43,7 @@ const Orders = () => {
                 <div>
                     <Grid2 container sx={{ padding: 5 }}>
                         <Grid2 md={12} display="flex" justifyContent="center" alignItems="center">
-                            <Item>
+                            <GenericCard>
                                 <List sx={{ width: 1000, maxWidth: 1000, bgcolor: 'background.paper' }}>
                                     <h1>{user.displayName} Orders</h1>
                                     {orders.map(order => (
@@ -75,7 +67,7 @@ const Orders = () => {
                                     ))}
                                     <Divider />
                                 </List>
-                            </Item>
+                            </GenericCard>
                         </Grid2>
                     </Grid2>
                 </div>
