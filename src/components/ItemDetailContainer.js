@@ -15,7 +15,7 @@ export default function ItemDetailContainer () {
         setLoading(true)
         const item = doc(db, "items", productId)
 
-        getDoc(item).then((snapshot) => {
+        await getDoc(item).then((snapshot) => {
             if(snapshot.exists()) {
                 setProducto({id: snapshot.id, ...snapshot.data()})
             }
@@ -27,6 +27,6 @@ export default function ItemDetailContainer () {
     }, [])
 
     return (
-        producto && <ItemDetail producto={producto} />
+        producto && producto.images && <ItemDetail producto={producto} imagenes={producto.images} />
     )
 }
