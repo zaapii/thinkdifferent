@@ -14,9 +14,12 @@ import { useContext } from 'react'
 const Item = ({ producto }) => {
 
     const { addToCart } = useContext(CartContext)
+
+    // ADD PRODUCT TO CARD
     function onAdd(product) {
         addToCart(product, product.quantity)
     }
+    
     return (
         <Card sx={{ maxWidth: 345 }}>
             <CardMedia

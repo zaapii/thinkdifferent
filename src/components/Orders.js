@@ -16,6 +16,7 @@ const Orders = () => {
     const { userId } = useParams()
     const [user] = useAuthState(auth)
 
+    // FETCH ORDERS FROM FIREBASE
     async function getOrders() {
         setLoading(true)
         const orders = query(collection(db, "users"),
@@ -32,6 +33,7 @@ const Orders = () => {
         getOrders()
     }, [])
 
+    // TODO => SHOW ORDER DETAILS WITH PRODUCTS
     const viewOrder = (orderId) => {
         console.log(orderId)
     }

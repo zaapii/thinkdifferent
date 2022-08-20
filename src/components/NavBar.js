@@ -33,21 +33,21 @@ const ResponsiveAppBar = ({ itemQuantity }) => {
             return;
         }
     }, [user, loading]);
+
+    // IMPORT CATEGORIES FROM FIREBASE
     async function getCategorias() {
         const db = getFirestore()
-
         const itemsCollection = collection(db, "categories")
-
         getDocs(itemsCollection).then((snapshot) => {
             setCategorias(snapshot.docs.map(doc => doc.data().categories))
         })
     }
 
+    // LOGOUT AND REDIRECT TO /
     const logoutAndRedirect = () => {
         logout()
         navigate(`/`)
     }
-
 
     useEffect(() => {
         getCategorias()

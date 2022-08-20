@@ -15,12 +15,15 @@ const ItemDetail = ({ producto, imagenes }) => {
 
     const { addToCart, cart } = useContext(CartContext)
 
+    // ADD PRODUCT TO CART
     function onAdd(product) {
         addToCart(product, product.quantity)
     }
 
+    // STATE TO CHANGE THE MAIN IMAGE WHEN YOU CLICK IT
     const [imagenPrincipal, setImagenPrincipal] = useState()
 
+    // SETS THE FIRST IMAGE AS MAIN IMAGE
     useEffect(() => {
         setImagenPrincipal(imagenes[0])
     }, [imagenes])

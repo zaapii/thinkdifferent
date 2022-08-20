@@ -29,20 +29,24 @@ function ItemCount({ producto, initial, onAdd}) {
           </Button>
         </>
     );
-
+    
+    // ADD ITEMS TO CART
     function addItems(){
         onAdd({producto: producto, quantity: value})
         enqueueSnackbar(`Ha añadido correctamente ${value} ${producto.title}`, { action, variant: 'success' })
     }
 
+    // COUNTER + 1 WITH STOCK VALIDATION
     function addItem() {
         value < producto.stock ? setValue(parseInt(value) + 1) : setValue(producto.stock)
     }
 
+    // COUNTER - 1
     function removeItem() {
         value > 0 ? setValue(parseInt(value) - 1) : setValue(0)
     }
 
+    // VERIFY STOCK, IF AMOUNT EXCEEDS STOCK, IT SETS THE MAXIMUM STOCK
     function verifyStock(e) {
         if (e.target.value <= producto.stock) {
             setValue(e.target.value)

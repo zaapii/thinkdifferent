@@ -24,7 +24,7 @@ const ItemListContainer = () => {
     const classes = useStyles()
     useEffect(() => {
         setLoading(true)
-        // Filtered Products by category
+        // FILTERED PRODUCTS BY CATEGORY WHEN CATEGORY NOT NULL
         if (category) {
             const filtered = query(collection(db, "items"),
                 where("category", "==", category),
@@ -35,7 +35,7 @@ const ItemListContainer = () => {
                 setLoading(false)
             })
         } else {
-            // All catalog
+            // ALL CATALOG WHEN CATEGORY IS NULL (COMING FROM '/')
             const allCatalog = query(collection(db, "items"),
                 limit(20))
             getDocs(allCatalog).then((snapshot) => {

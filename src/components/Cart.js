@@ -29,6 +29,7 @@ const Cart = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [user] = useAuthState(auth);
 
+    // GO TO NEW ORDER CREATED
     function goToOrder(order) {
         navigate(`/order/${order.id}`)
     }

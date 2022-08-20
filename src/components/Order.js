@@ -14,6 +14,7 @@ const Order = () => {
     const [order, setOrder] = useState(null)
     const [loading, setLoading] = useState(false)
 
+    // FETCH THE ORDER FROM FIREBASE
     async function getOrder() {
         setLoading(true)
         const item = doc(db, "orders", orderId)
