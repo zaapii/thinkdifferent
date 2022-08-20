@@ -23,7 +23,7 @@ const Item = ({ producto }) => {
                 component="img"
                 height="200"
                 image={producto.images[0]}
-                sx={{ objectFit: "contain" }}
+                sx={{ objectFit: "scale-down" }}
             />
             <CardContent>
                 <Typography variant="h5" sx={{ marginBottom: 1 }}>
