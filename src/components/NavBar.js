@@ -22,7 +22,6 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { Alert } from '@mui/material'
 
 const pages = ['Sobre Nosotros']
-const settings = ['Perfil', 'Pedidos']
 
 const ResponsiveAppBar = ({ itemQuantity }) => {
     const [user, loading, error] = useAuthState(auth);
@@ -177,11 +176,11 @@ const ResponsiveAppBar = ({ itemQuantity }) => {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
-                                    {settings.map((setting) => (
-                                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                            <Typography textAlign="center">{setting}</Typography>
-                                        </MenuItem>
-                                    ))}
+                                    <NavLink style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }} to={`/orders/${user.uid}`}>
+                                    <MenuItem key='orders'>
+                                        <Typography textAlign="center">Orders</Typography>
+                                    </MenuItem>
+                                    </NavLink>
                                     <MenuItem key='logout' onClick={logout}>
                                         <Typography textAlign="center">Logout</Typography>
                                     </MenuItem>

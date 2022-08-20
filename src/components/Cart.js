@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { CartContext } from '../CartContext'
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -15,13 +15,73 @@ import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import Button from '@mui/material/Button'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { NavLink } from "react-router-dom";
+import { collection, addDoc, updateDoc, doc, query, where, getDocs, arrayUnion } from 'firebase/firestore'
+import { db, auth } from '../firebase'
+import { useSnackbar } from 'notistack';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+
 
 const Cart = () => {
 
-    const { cart, cartTotal, removeFromCart } = useContext(CartContext)
+    let navigate = useNavigate();
+    let userId = null;
+    const { cart, cartTotal, removeFromCart, clearCart } = useContext(CartContext)
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const [user] = useAuthState(auth);
+    const [userOrders, setUserOrders] = useState()
 
-    function remove(productId) {
-        console.log(productId)
+    function goToOrder(order) {
+        navigate(`/order/${order.id}`)
+    }
+
+    const sendOrder = () => {
+        if (!user) {
+            enqueueSnackbar(`Para realizar una compra debe iniciar sesión con Google`, { variant: 'error' })
+            return
+        }
+        // SE CREA EL OBJETO ORDER
+        const order = {
+            buyer: {
+                name: user.displayName,
+                email: user.email
+            },
+            items: cart.map(product => {
+                return {
+                    name: product.title,
+                    price: product.price,
+                    quantity: product.quantity,
+                    id: product.id,
+                    avatar: product.images[0],
+                }
+            }),
+            total: cartTotal(),
+            date: (new Date()).toDateString()
+        }
+
+        const ordersCollection = collection(db, "orders")
+        addDoc(ordersCollection, order).then(async ({ id }) => {
+            const orderWithId = {...order, id: id}
+            // RESTA EL STOCK DEL PRODUCTO
+            cart.forEach(product => {
+                const oldStock = product.stock
+                const itemDoc = doc(db, "items", product.id)
+                updateDoc(itemDoc, { stock: parseInt(oldStock) - parseInt(product.quantity) })
+            })
+
+            // AGREGAMOS LA ORDEN RECIEN HECHA AL USUARIO
+            const q = query(collection(db, "users"), where("uid", "==", user.uid));
+            const docs = await getDocs(q);
+            docs.forEach((doc) => {
+                userId = doc.id
+            });
+            const userDoc = doc(db, "users", userId)
+            updateDoc(userDoc, { orders: arrayUnion(orderWithId) })
+            clearCart()
+
+            // NAVEGA A LA VIEW DE LA ORDER
+            goToOrder({ ...order, id: id })
+        })
     }
 
     const Item = styled(Paper)(({ theme }) => ({
@@ -38,7 +98,7 @@ const Cart = () => {
                     {cart.length > 0 ?
                         <List sx={{ width: 1000, maxWidth: 1000, bgcolor: 'background.paper' }}>
                             {cart.map(product => (
-                                <ListItem keyt={product.id} secondaryAction={
+                                <ListItem key={product.id} secondaryAction={
                                     <IconButton onClick={() => removeFromCart(product.id)} edge="end" color="error" aria-label="delete">
                                         <DeleteIcon />
                                     </IconButton>
@@ -72,7 +132,7 @@ const Cart = () => {
                                 <h1>{`Total: $ ${cartTotal()}`}</h1>
                             </ListItem>
                             <ListItem sx={{ marginTop: 2 }}>
-                                <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Finalizar Compra</Button>
+                                <Button onClick={sendOrder} sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Finalizar Compra</Button>
                             </ListItem>
                         </List>
                         : <div>
@@ -82,12 +142,11 @@ const Cart = () => {
                                     Volver al Índice
                                 </Button>
                             </NavLink>
-                            </div>
+                        </div>
                     }
                 </Item>
             </Grid2>
         </Grid2>
-
 
     );
 }

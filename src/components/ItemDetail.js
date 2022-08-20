@@ -58,10 +58,10 @@ const ItemDetail = ({ producto }) => {
             </Grid>
             <Grid item md={2} sx={{ marginTop: 30 }}>
                 <h1>Precio: $ {producto.price}</h1>
-                {!cart.length ?
+                {!cart.length && producto.stock > 0?
                     <ItemCount onAdd={onAdd} producto={producto} initial="1" /> :
                     <Link style={{ textDecoration: 'none' }} to={`/cart`}>
-                        <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Finalizar Compra</Button>
+                        {producto.stock > 0 ? <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Finalizar Compra</Button> : <h3>SIN STOCK :(</h3>}
                     </Link>
                 }
             </Grid>

@@ -18,7 +18,6 @@ const CartProvider = (children) => {
         cart.forEach(product => {
             sum += parseInt(product.quantity)
         })
-        console.log(sum)
         return sum
     }
 
@@ -31,8 +30,6 @@ const CartProvider = (children) => {
     }
 
     const addToCart = (item, quantity) => {
-        console.log(item)
-        console.log(quantity)
         if(cart.length === 0) {
             const itemToAdd = {
                 ...item.producto,

@@ -35,9 +35,11 @@ const Item = ({ producto }) => {
             </CardContent>
             <CardActions>
                 <Grid container sx={{ alignItems: "center" }}>
+                    { producto.stock > 0 ?
                     <Grid item>
                         <ItemCount onAdd={onAdd} producto={producto} initial="1" />
                     </Grid>
+                    : <h3>SIN STOCK :(</h3> } 
                     <Grid item md={12} sx={{marginTop: 1}}>
                         <Link style={{ textDecoration: 'none' }} to={`/item/${producto.id}`}>
                             <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="error" startIcon={<PreviewIcon />}>Ver Detalle</Button>
