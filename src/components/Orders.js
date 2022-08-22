@@ -9,6 +9,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import PreviewIcon from '@mui/icons-material/Preview';
 import GenericCard from './GenericCard'
+import BackToIndexButton from "./BackToIndexButton"
 
 const Orders = () => {
     const [loading, setLoading] = useState(false)
@@ -48,11 +49,11 @@ const Orders = () => {
     return (
         <div>
             {loading && <LinearProgress color="error" />}
-            {orders &&
-                <div>
-                    <Grid2 container sx={{ padding: 5 }}>
-                        <Grid2 md={12} display="flex" justifyContent="center" alignItems="center">
-                            <GenericCard>
+            <div>
+                <Grid2 container sx={{ padding: 5 }}>
+                    <Grid2 md={12} display="flex" justifyContent="center" alignItems="center">
+                        <GenericCard>
+                            {orders ?
                                 <List sx={{ width: 1000, maxWidth: 1000, bgcolor: 'background.paper' }}>
                                     <h1>{user.displayName} Orders</h1>
                                     {orders.map(order => (
@@ -76,11 +77,16 @@ const Orders = () => {
                                     ))}
                                     <Divider />
                                 </List>
-                            </GenericCard>
-                        </Grid2>
+                                :
+                                <div>
+                                    <h3>No orders yet, buy something :)</h3>
+                                    <BackToIndexButton />
+                                </div>
+                            }
+                        </GenericCard>
                     </Grid2>
-                </div>
-            }
+                </Grid2>
+            </div>
             <div>
                 {modalOrder && <Dialog
                     fullWidth={true}
