@@ -26,14 +26,14 @@ const Item = ({ producto }) => {
                 component="img"
                 height="200"
                 image={producto.images[0]}
-                sx={{ objectFit: "cover" }}
+                sx={{ objectFit: "contain" }}
             />
             <CardContent>
                 <Typography variant="h5" sx={{ marginBottom: 1 }}>
                     {producto.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    {producto.description.substring(0, 50) + '...'}
+                    {producto.description}
                 </Typography>
             </CardContent>
             <CardActions>
@@ -42,10 +42,10 @@ const Item = ({ producto }) => {
                     <Grid item>
                         <ItemCount onAdd={onAdd} producto={producto} initial="1" />
                     </Grid>
-                    : <h3>SIN STOCK :(</h3> } 
+                    : <h3>NO STOCK :(</h3> } 
                     <Grid item md={12} sx={{marginTop: 1}}>
                         <Link style={{ textDecoration: 'none' }} to={`/item/${producto.id}`}>
-                            <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="error" startIcon={<PreviewIcon />}>Ver Detalle</Button>
+                            <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="error" startIcon={<PreviewIcon />}>More Details</Button>
                         </Link>
                     </Grid>
                 </Grid>

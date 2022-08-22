@@ -80,7 +80,7 @@ function ItemCount({ producto, initial, onAdd}) {
                 </Grid>
                 <Grid item md={12}>
                     <Button sx={{width: '100%', color:"black"}} variant="outlined" onClick={addItems} startIcon={<AddShoppingCartIcon />}>
-                        Añadir al carrito
+                        Add to Cart
                     </Button>
                 </Grid>
             </Grid>

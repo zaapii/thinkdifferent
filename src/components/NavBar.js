@@ -17,9 +17,11 @@ import { getDocs, collection, getFirestore } from "firebase/firestore"
 import { auth, signInWithGoogle, logout } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import GoogleIcon from '@mui/icons-material/Google';
-import { Alert } from '@mui/material'
+import { Alert, alpha, styled } from '@mui/material'
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
 
-const pages = ['Sobre Nosotros']
+const pages = ['About Us']
 
 const ResponsiveAppBar = ({ itemQuantity }) => {
     const [user, loading] = useAuthState(auth);
@@ -27,6 +29,48 @@ const ResponsiveAppBar = ({ itemQuantity }) => {
     const [anchorElUser, setAnchorElUser] = useState(null)
     const [categorias, setCategorias] = useState(null)
     const navigate = useNavigate()
+
+    const Search = styled('div')(({ theme }) => ({
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: alpha(theme.palette.common.white, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(1),
+            width: 'auto',
+        },
+    }));
+
+    const SearchIconWrapper = styled('div')(({ theme }) => ({
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }));
+
+    const StyledInputBase = styled(InputBase)(({ theme }) => ({
+        color: 'inherit',
+        '& .MuiInputBase-input': {
+            padding: theme.spacing(1, 1, 1, 0),
+            // vertical padding + font size from searchIcon
+            paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+            transition: theme.transitions.create('width'),
+            width: '100%',
+            [theme.breakpoints.up('sm')]: {
+                width: '12ch',
+                '&:focus': {
+                    width: '20ch',
+                },
+            },
+        },
+    }));
 
     useEffect(() => {
         if (loading) {
@@ -125,20 +169,20 @@ const ResponsiveAppBar = ({ itemQuantity }) => {
                                     <Typography textAlign="center">{page}</Typography>
                                 </MenuItem>
                             ))}
+                            {categorias && categorias[0].map((categoria) => (
+                                <NavLink style={{ textDecoration: 'none', fontWeight: 'bold' }} key={categoria} to={`/category/${categoria}`}>
+                                    <Button
+                                        variant="outlined" color="error"
+                                        onClick={handleCloseNavMenu}
+                                        sx={{ my: 2, mx: 3, color: 'black', display: 'block' }}
+                                    >
+                                        {categoria}
+                                    </Button>
+                                </NavLink>
+                            ))}
                         </Menu>
                     </Box>
-                    <Box sx={{ flexGrow: 1, ml: 3, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{ my: 2, mx: 1, color: 'white', display: 'block' }}
-                            >
-                                {page}
-                            </Button>
-                        ))}
-                    </Box>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, marginLeft: "auto", marginRight: "auto" }}>
                         {categorias && categorias[0].map((categoria) => (
                             <NavLink style={{ textDecoration: 'none', fontWeight: 'bold' }} key={categoria} to={`/category/${categoria}`}>
                                 <Button
@@ -151,9 +195,18 @@ const ResponsiveAppBar = ({ itemQuantity }) => {
                             </NavLink>
                         ))}
                     </Box>
+                    <Search sx={{marginRight: 5}}>
+                        <SearchIconWrapper>
+                            <SearchIcon />
+                        </SearchIconWrapper>
+                        <StyledInputBase
+                            placeholder="Search…"
+                            inputProps={{ 'aria-label': 'search' }}
+                        />
+                    </Search>
                     <CartWidget itemQuantity={itemQuantity} />
-                    {user ? <Alert variant="outlined" sx={{color: 'white', marginRight: 2}} color="error" severity="success">
-                        Bienvenido {user.email}
+                    {user ? <Alert variant="outlined" sx={{ color: 'white', marginRight: 2 }} color="error" severity="success">
+                        Welcome {user.email}
                     </Alert> : ''}
                     {user ?
                         <div>
@@ -180,9 +233,9 @@ const ResponsiveAppBar = ({ itemQuantity }) => {
                                     onClose={handleCloseUserMenu}
                                 >
                                     <NavLink style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }} to={`/orders/${user.uid}`} onClick={handleCloseUserMenu}>
-                                    <MenuItem key='orders' onClick={handleCloseUserMenu}>
-                                        <Typography textAlign="center">Orders</Typography>
-                                    </MenuItem>
+                                        <MenuItem key='orders' onClick={handleCloseUserMenu}>
+                                            <Typography textAlign="center">Orders</Typography>
+                                        </MenuItem>
                                     </NavLink>
                                     <MenuItem key='logout' onClick={logoutAndRedirect}>
                                         <Typography textAlign="center">Logout</Typography>

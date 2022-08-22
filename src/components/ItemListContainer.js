@@ -4,11 +4,9 @@ import ItemList from './ItemList'
 import Grid from '@mui/material/Grid'
 import { useParams } from 'react-router-dom'
 import { getDocs, collection, query, where, limit } from "firebase/firestore"
-import Button from '@mui/material/Button'
-import { NavLink } from 'react-router-dom'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LinearProgress from '@mui/material/LinearProgress';
 import { db } from '../firebase'
+import BackToIndexButton from "./BackToIndexButton"
 
 const useStyles = makeStyles({
     gridContainer: {
@@ -59,11 +57,7 @@ const ItemListContainer = () => {
                     <div>
                         {!loading && <h1>{`No hay Productos en la categoría ${category} :(`}</h1>}
                         {!loading &&
-                            <NavLink style={{ textDecoration: 'none' }} to={`/`}>
-                                <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="error" startIcon={<ArrowBackIcon />}>
-                                    Volver al Índice
-                                </Button>
-                            </NavLink>
+                            <BackToIndexButton />
                         }
                     </div>}
             </Grid>

@@ -7,8 +7,12 @@ import Grid2 from '@mui/material/Unstable_Grid2';
 import { Alert, Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { useAuthState } from "react-firebase-hooks/auth";
 import GenericCard from './GenericCard'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const Order = () => {
+
+    const MySwal = withReactContent(Swal)
     const { orderId } = useParams()
     const [user] = useAuthState(auth);
     const [order, setOrder] = useState(null)
@@ -17,11 +21,23 @@ const Order = () => {
     // FETCH THE ORDER FROM FIREBASE
     async function getOrder() {
         setLoading(true)
+        MySwal.fire({
+            title: <p>The order is being processed, please wait...</p>,
+            icon: "success",
+            didOpen: () => {
+                MySwal.showLoading()
+            }
+        })
         const item = doc(db, "orders", orderId)
         await getDoc(item).then((snapshot) => {
             if (snapshot.exists()) {
                 setOrder({ id: orderId, ...snapshot.data() })
                 setLoading(false)
+                MySwal.fire({
+                    title: <p>¡Order placed successfully!</p>,
+                    icon: "success",
+                    confirmButtonText: 'Cool'
+                })
             }
         })
     }
@@ -37,10 +53,10 @@ const Order = () => {
                 <Grid2 container sx={{ padding: 5 }}>
                     <Grid2 md={12} display="flex" justifyContent="center" alignItems="center">
                         <GenericCard>
-                        <Alert severity="success" variant="filled">
-                            ¡Orden recibida correctamente! — Recibiras las instrucciones para el envio de la compra a tu email: <strong>{user.email}</strong>
-                        </Alert>
-                            <h2>Datos de la orden N° {order.id}: </h2>
+                            <Alert severity="success" variant="filled">
+                                Order received successfully! — You will receive the instructions for products shipping to your email: <strong>{user.email}</strong>
+                            </Alert>
+                            <h2>Order N° {order.id}: </h2>
                             <List sx={{ width: 1000, maxWidth: 1000, bgcolor: 'background.paper' }}>
                                 {order.items.map(item => (
                                     <ListItem key={item.id}>
@@ -69,7 +85,7 @@ const Order = () => {
                                     </ListItem>
                                 ))}
                                 <Divider />
-                                <h2 style={{ marginTop: 50 }}>Datos del comprador: </h2>
+                                <h2 style={{ marginTop: 50 }}>Buyer Data: </h2>
                                 <ListItem key={user.id}>
                                     <Grid2 container md={12} display="flex" justifyContent="center" alignItems="center">
                                         <Grid2 xs={1}>
@@ -87,7 +103,7 @@ const Order = () => {
                                 </ListItem>
                                 <Divider />
                                 <ListItem sx={{ marginTop: 2 }}>
-                                    <h1>{`Total de la compra: $ ${order.total}`}</h1>
+                                    <h1>{`Total: $ ${order.total}`}</h1>
                                 </ListItem>
                             </List>
                         </GenericCard>

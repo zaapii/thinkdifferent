@@ -35,7 +35,7 @@ const ItemDetail = ({ producto, imagenes }) => {
                 <ImageList sx={{ width: 120, height: 600, padding: 3 }} cols={1} rowHeight={120} gap={1}>
                     {imagenes?.map((img) => (
                         <ImageListItem key={img} onClick={() => setImagenPrincipal(img)}>
-                            <Image src={`${img}`} height="100%" width="100%" fit="cover" duration={3000} easing="cubic-bezier(0.7, 0, 0.6, 1)" showLoading={false}
+                            <Image src={`${img}`} height="100%" width="100%" fit="contain" duration={3000} easing="cubic-bezier(0.7, 0, 0.6, 1)" showLoading={false}
                                 errorIcon={true}
                                 distance="100px"
                                 shiftDuration={900}
@@ -59,14 +59,14 @@ const ItemDetail = ({ producto, imagenes }) => {
                 {!cart.length && producto.stock > 0?
                     <Box sx={{ minWidth: 275 }}>
                         <Card sx={{padding: 2}}variant="outlined">
-                            <h1 style={{marginLeft: 15}}>Precio: $ {producto.price}</h1>
-                            <p style={{marginLeft: 33}}>{producto.stock} unidades disponibles</p>
+                            <h1 style={{marginLeft: 15}}>Price: $ {producto.price}</h1>
+                            <p style={{marginLeft: 55}}>{producto.stock} units on stock</p>
                             <ItemCount onAdd={onAdd} producto={producto} initial="1" /> 
                         </Card>
                     </Box>
                     :
                     <Link style={{ textDecoration: 'none' }} to={`/cart`}>
-                        {producto.stock > 0 ? <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Finalizar Compra</Button> : <h3>SIN STOCK :(</h3>}
+                        {producto.stock > 0 ? <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Go to Checkout</Button> : <h3>NO STOCK :(</h3>}
                     </Link>
                 }
             </Grid>

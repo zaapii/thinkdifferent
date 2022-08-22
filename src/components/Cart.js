@@ -11,14 +11,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import Button from '@mui/material/Button'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { NavLink } from "react-router-dom";
 import { collection, addDoc, updateDoc, doc, query, where, getDocs, arrayUnion } from 'firebase/firestore'
 import { db, auth } from '../firebase'
 import { useSnackbar } from 'notistack';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import GenericCard from './GenericCard';
+import BackToIndexButton from './BackToIndexButton';
 
 
 const Cart = () => {
@@ -123,16 +122,12 @@ const Cart = () => {
                                 <h1>{`Total: $ ${cartTotal()}`}</h1>
                             </ListItem>
                             <ListItem sx={{ marginTop: 2 }}>
-                                <Button onClick={sendOrder} sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Finalizar Compra</Button>
+                                <Button onClick={sendOrder} sx={{ width: '100%', color: "black" }} variant="outlined" color="success" startIcon={<ShoppingCartCheckoutIcon />}>Go to Checkout</Button>
                             </ListItem>
                         </List>
                         : <div>
-                            <h1>No hay Productos</h1>
-                            <NavLink style={{ textDecoration: 'none' }} to={`/`}>
-                                <Button sx={{ width: '100%', color: "black" }} variant="outlined" color="error" startIcon={<ArrowBackIcon />}>
-                                    Volver al Índice
-                                </Button>
-                            </NavLink>
+                            <h1>No Products in Cart</h1>
+                            <BackToIndexButton />
                         </div>
                     }
                 </GenericCard>

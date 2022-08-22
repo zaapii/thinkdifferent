@@ -1,7 +1,7 @@
 import Item from "./Item"
 import Grid from '@mui/material/Grid'
 
-function ItemList({productos, displayBadge, itemDetail}) {
+function ItemList({productos, itemDetail}) {
     
     return ( 
         productos.map(product => (

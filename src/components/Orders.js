@@ -2,7 +2,7 @@
 import { useAuthState } from "react-firebase-hooks/auth";
 import Grid2 from '@mui/material/Unstable_Grid2';
 import { auth, db } from "../firebase";
-import { Divider, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import { Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 import LinearProgress from '@mui/material/LinearProgress';
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -15,6 +15,8 @@ const Orders = () => {
     const [orders, setOrders] = useState(null)
     const { userId } = useParams()
     const [user] = useAuthState(auth)
+    const [open, setOpen] = useState(false);
+    const [modalOrder, setModalOrder] = useState(null)
 
     // FETCH ORDERS FROM FIREBASE
     async function getOrders() {
@@ -35,8 +37,13 @@ const Orders = () => {
 
     // TODO => SHOW ORDER DETAILS WITH PRODUCTS
     const viewOrder = (orderId) => {
-        console.log(orderId)
+        setModalOrder(orders.find(order => order.id === orderId))
+        setOpen(true);
     }
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <div>
@@ -74,6 +81,72 @@ const Orders = () => {
                     </Grid2>
                 </div>
             }
+            <div>
+                {modalOrder && <Dialog
+                    fullWidth={true}
+                    maxWidth={'lg'}
+                    open={open}
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle>{`Order N° ${modalOrder.id} Details:`}</DialogTitle>
+                    <DialogContent>
+                        <List sx={{ width: 1150, maxWidth: 1150, bgcolor: 'background.paper' }}>
+                            {modalOrder.items.map(item => (
+                                <ListItem key={item.id}>
+                                    <Grid2 container md={12} display="flex" justifyContent="center" alignItems="center">
+                                        <Grid2 xs={1}>
+                                            <ListItemAvatar>
+                                                <Avatar src={item.avatar} />
+                                            </ListItemAvatar>
+                                        </Grid2>
+                                        <Grid2 xs={3}>
+                                            <ListItemText primary="ID de compra" secondary={item.id} sx={{ margin: 1 }} />
+                                        </Grid2>
+                                        <Grid2 xs={4}>
+                                            <ListItemText primary="Name" secondary={item.name} />
+                                        </Grid2>
+                                        <Grid2 sx={{ marginLeft: 2 }} xs={1}>
+                                            <ListItemText primary="Quantity" secondary={item.quantity} />
+                                        </Grid2>
+                                        <Grid2 sx={{ marginLeft: 2 }} xs={1}>
+                                            <ListItemText primary="Price" secondary={`$ ${item.price}`} sx={{ margin: 1 }} />
+                                        </Grid2>
+                                        <Grid2 sx={{ marginLeft: 2 }} xs={1}>
+                                            <ListItemText primary="SubTotal" secondary={`$ ${item.price * item.quantity}`} sx={{ margin: 1 }} />
+                                        </Grid2>
+                                    </Grid2>
+                                </ListItem>
+                            ))}
+                            <Divider />
+                            <h2 style={{ marginTop: 50 }}>Buyer Data: </h2>
+                            <ListItem key={user.id}>
+                                <Grid2 container md={12} display="flex" justifyContent="center" alignItems="center">
+                                    <Grid2 xs={1}>
+                                        <ListItemAvatar>
+                                            <Avatar src={user.photoURL} />
+                                        </ListItemAvatar>
+                                    </Grid2>
+                                    <Grid2 xs={4}>
+                                        <ListItemText primary="Name" secondary={user.displayName} />
+                                    </Grid2>
+                                    <Grid2 xs={1}>
+                                        <ListItemText primary="Email" secondary={user.email} />
+                                    </Grid2>
+                                </Grid2>
+                            </ListItem>
+                            <Divider />
+                            <ListItem sx={{ marginTop: 2 }}>
+                                <h1>{`Total: $ ${modalOrder.total}`}</h1>
+                            </ListItem>
+                        </List>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button color="error" onClick={handleClose}>Close</Button>
+                    </DialogActions>
+                </Dialog>
+                }
+            </div>
         </div>
     );
 }
